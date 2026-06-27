@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ILokman — GUI & Modeling Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B0D12;
+    --bg-soft: #11141B;
+    --surface: #161A23;
+    --surface-2: #1D222D;
+    --border: #2A3040;
+    --cyan: #F6C744;
+    --magenta: #FF8A3D;
+    --amber: #FFE08A;
+    --text: #E8EAF0;
+    --muted: #8A93A6;
+    --radius: 14px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* faint grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ambient floating particles */
+  .particle {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+    filter: blur(1px);
+    animation: particleFloat linear infinite;
+  }
+  @keyframes particleFloat {
+    0% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(20px, -30px) scale(1.1); }
+    50% { transform: translate(-10px, -60px) scale(0.95); }
+    75% { transform: translate(-30px, -20px) scale(1.05); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
+
+  h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.01em; }
+
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(11,13,18,0.75);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 3rem;
+  }
+
+  .nav-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .nav-logo .dot { color: var(--cyan); }
+
+  .nav-links { display: flex; gap: 2rem; }
+
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a:hover { color: var(--cyan); }
+  .nav-links a::before { content: '/'; color: var(--border); margin-right: 0.3rem; }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 92vh;
+    display: flex;
+    align-items: center;
+    padding: 4rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 4rem;
+  }
+
+  .hero-left { flex: 1.1; }
+  .hero-right { flex: 1; display: flex; justify-content: center; }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--cyan);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .eyebrow .pulse {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 0 0 rgba(246,199,68,0.6);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(246,199,68,0.5); }
+    70% { box-shadow: 0 0 0 8px rgba(246,199,68,0); }
+    100% { box-shadow: 0 0 0 0 rgba(246,199,68,0); }
+  }
+
+  .hero h1 {
+    font-size: clamp(2.6rem, 6vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.2rem;
+  }
+  .hero h1 .accent { color: var(--cyan); }
+
+  .hero-desc {
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 480px;
+    margin-bottom: 2.2rem;
+  }
+
+  .btn-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.85rem 1.8rem;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
+    transition: transform 0.15s, border-color 0.2s, background 0.2s;
+  }
+  .btn-primary {
+    background: var(--cyan);
+    color: #0B0D12;
+  }
+  .btn-primary:hover { transform: translateY(-2px); background: #FFE08A; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); }
+
+  /* terminal card */
+  .terminal {
+    width: 100%;
+    max-width: 420px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(246,199,68,0.05);
+    animation: terminalFloat 6s ease-in-out infinite;
+  }
+  @keyframes terminalFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.8rem 1rem;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+  }
+  .terminal-dot { width: 11px; height: 11px; border-radius: 50%; }
+  .terminal-bar .terminal-dot:nth-child(1) { background: #FF5F57; }
+  .terminal-bar .terminal-dot:nth-child(2) { background: #FEBC2E; }
+  .terminal-bar .terminal-dot:nth-child(3) { background: #28C840; }
+  .terminal-title {
+    margin-left: 0.6rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .terminal-body {
+    padding: 1.4rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 2;
+  }
+  .terminal-body .ln { color: var(--muted); display: inline-block; width: 1.5em; user-select: none; }
+  .t-purple { color: #C792EA; }
+  .t-cyan { color: var(--cyan); }
+  .t-string { color: #FFC857; }
+  .t-comment { color: #5C6478; font-style: italic; }
+  .t-func { color: #82AAFF; }
+  .cursor {
+    display: inline-block;
+    width: 8px; height: 1.1em;
+    background: var(--cyan);
+    vertical-align: text-bottom;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .hero-avatar {
+    width: 38px; height: 38px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.6rem;
+  }
+  .hero-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    user-select: none;
+  }
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .divider-line::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 30%;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    opacity: 0.7;
+    animation: dividerSlide 6s ease-in-out infinite;
+  }
+  .divider-line.right::after { animation-delay: 3s; }
+  @keyframes dividerSlide {
+    0% { left: -40%; }
+    100% { left: 110%; }
+  }
+  .divider-symbol {
+    flex-shrink: 0;
+    color: var(--border);
+    transition: color 0.3s, transform 0.4s;
+  }
+  .divider:hover .divider-symbol {
+    color: var(--cyan);
+    transform: rotate(90deg);
+  }
+
+  /* ─── SECTION SHARED ─── */
+  section { position: relative; z-index: 1; padding: 6rem 3rem; max-width: 1200px; margin: 0 auto; }
+
+  .section-head { margin-bottom: 3rem; }
+  .section-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--cyan);
+    margin-bottom: 0.6rem;
+    position: relative;
+    display: block;
+  }
+  .section-title {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
+    position: relative;
+    display: inline-block;
+  }
+  .section-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 0;
+    height: 2px;
+    background: var(--cyan);
+    transition: width 0.6s ease;
+  }
+  .section-head.visible .section-title::after,
+  .reveal.visible .section-title::after {
+    width: 48px;
+  }
+
+  /* ─── ABOUT ─── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 2rem;
+    align-items: stretch;
+  }
+
+  .about-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2.2rem;
+    transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  }
+  .about-card:hover {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 1px rgba(246,199,68,0.1), 0 12px 40px rgba(246,199,68,0.08);
+    transform: translateY(-3px);
+  }
+
+  .about-card p { color: var(--muted); font-size: 1.02rem; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+  }
+
+  .stat-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.6rem;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .stat-chip:hover {
+    border-color: var(--cyan);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(246,199,68,0.1);
+  }
+
+  .stat-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--cyan);
+    margin-bottom: 0.3rem;
+    transition: transform 0.2s;
+  }
+  .stat-chip:hover .stat-num { transform: scale(1.08); }
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ─── SKILLS ─── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .skill-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.6rem;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+  }
+  .skill-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--cyan);
+    box-shadow: 0 14px 36px rgba(246,199,68,0.1);
+  }
+
+  .skill-top {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .skill-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.2rem 0.5rem;
+    transition: color 0.25s, border-color 0.25s, transform 0.25s;
+  }
+  .skill-card:hover .skill-num {
+    color: var(--cyan);
+    border-color: var(--cyan);
+    transform: rotate(-6deg);
+  }
+
+  .skill-card h4 { font-size: 1.05rem; font-weight: 600; }
+
+  .skill-card p { color: var(--muted); font-size: 0.88rem; margin: 0.5rem 0 0.9rem; }
+
+  .skill-bar {
+    height: 6px;
+    background: var(--surface-2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .skill-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1.2s cubic-bezier(.4,0,.2,1);
+    background: var(--cyan);
+  }
+  .skill-card:nth-child(2) .skill-fill { background: var(--magenta); }
+  .skill-card:nth-child(3) .skill-fill { background: var(--amber); }
+  .skill-card:nth-child(4) .skill-fill { background: var(--cyan); }
+  .skill-card:nth-child(5) .skill-fill { background: var(--magenta); }
+  .skill-card:nth-child(6) .skill-fill { background: var(--amber); }
+
+  /* ─── PROJECTS ─── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+  }
+  .project-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--cyan);
+    box-shadow: 0 16px 40px rgba(246,199,68,0.1);
+  }
+
+  .project-video {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border: none;
+    display: block;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border);
+    transition: filter 0.3s;
+  }
+  .project-card:hover .project-video { filter: brightness(1.05) saturate(1.1); }
+
+  .project-body { padding: 1.2rem 1.4rem; }
+
+  .project-body h3 { font-size: 1.05rem; font-weight: 600; transition: color 0.2s; }
+  .project-card:hover .project-body h3 { color: var(--cyan); }
+
+  .project-body .proj-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    display: block;
+  }
+
+
+  .work-tabs {
+    display: inline-flex;
+    gap: 0.5rem;
+    padding: 0.45rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    margin-bottom: 1.6rem;
+  }
+
+  .work-tab {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+  }
+
+  .work-tab:hover {
+    color: var(--text);
+    border-color: var(--border);
+    transform: translateY(-1px);
+  }
+
+  .work-tab.active {
+    background: var(--cyan);
+    color: #0B0D12;
+    box-shadow: 0 10px 28px rgba(246,199,68,0.18);
+  }
+
+  .work-panel { display: none; }
+  .work-panel.active { display: block; }
+
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .game-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.015)), var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+  }
+
+  .game-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--cyan);
+    box-shadow: 0 16px 44px rgba(246,199,68,0.11);
+  }
+
+  .game-thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .thumb-placeholder {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(246,199,68,0.16), transparent 32%),
+      radial-gradient(circle at 80% 65%, rgba(255,92,138,0.14), transparent 34%),
+      var(--surface-2);
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .game-body { padding: 1.35rem 1.45rem 1.5rem; }
+
+  .game-meta {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--cyan);
+    margin-bottom: 0.55rem;
+  }
+
+  .game-body h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.55rem;
+  }
+
+  .game-desc {
+    color: var(--muted);
+    font-size: 0.93rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .game-actions { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+
+  .mini-btn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0.65rem 1rem;
+    border-radius: 9px;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    color: var(--text);
+    transition: transform 0.15s, border-color 0.2s, color 0.2s, background 0.2s;
+  }
+
+  .mini-btn:hover { transform: translateY(-2px); border-color: var(--cyan); color: var(--cyan); }
+  .mini-btn.primary { background: var(--cyan); color: #0B0D12; border-color: var(--cyan); }
+  .mini-btn.primary:hover { background: #FFE08A; color: #0B0D12; }
+
+
+
+  .project-card.hidden-showcase {
+    display: none;
+  }
+
+  .showcase-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.8rem;
+  }
+
+  .showcase-toggle {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0.85rem 1.7rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.2s, color 0.2s, background 0.2s;
+  }
+
+  .showcase-toggle:hover {
+    transform: translateY(-2px);
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+
+  .availability-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 1.5rem;
+    align-items: stretch;
+  }
+
+  .availability-card {
+    background: linear-gradient(180deg, rgba(246,199,68,0.055), rgba(255,255,255,0.015)), var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+  }
+
+  .availability-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--cyan);
+    box-shadow: 0 14px 36px rgba(246,199,68,0.1);
+  }
+
+  .availability-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--cyan);
+    background: rgba(246,199,68,0.08);
+    border: 1px solid rgba(246,199,68,0.22);
+    border-radius: 999px;
+    padding: 0.45rem 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .availability-status span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 0 0 rgba(246,199,68,0.55);
+    animation: pulse 2s infinite;
+  }
+
+  .availability-card h3 {
+    font-size: 1.35rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .availability-card p {
+    color: var(--muted);
+    font-size: 0.96rem;
+  }
+
+  .availability-list {
+    list-style: none;
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1.2rem;
+  }
+
+  .availability-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 0.92rem;
+  }
+
+  .availability-list strong {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    color: var(--cyan);
+    white-space: nowrap;
+  }
+
+  /* ─── PRICING ─── */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .price-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+  }
+  .price-card:hover {
+    border-color: var(--cyan);
+    transform: translateY(-3px);
+    box-shadow: 0 14px 36px rgba(246,199,68,0.08);
+  }
+
+  .price-card h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.8rem; }
+  .price-card p { color: var(--muted); font-size: 0.95rem; }
+  .price-card .note {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    background: var(--surface-2);
+    border-radius: 8px;
+    border-left: 2px solid var(--cyan);
+    font-size: 0.85rem;
+    color: var(--text);
+    transition: border-left-width 0.2s, padding-left 0.2s;
+  }
+  .price-card:hover .note { border-left-width: 4px; padding-left: 0.85rem; }
+
+  .payment-methods { list-style: none; margin-top: 0.5rem; }
+  .payment-methods li {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.85rem 1rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .payment-methods li:hover {
+    border-color: var(--cyan);
+    transform: translateX(4px);
+  }
+
+  /* ─── CONTACT ─── */
+  .contact { text-align: center; }
+
+  .discord-box {
+    max-width: 540px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .discord-box:hover { border-color: var(--cyan); transform: translateY(-3px); }
+  .discord-box::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -20%;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(246,199,68,0.12), transparent 70%);
+    pointer-events: none;
+    animation: glowDrift 10s ease-in-out infinite;
+  }
+  @keyframes glowDrift {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(40px, 30px); }
+  }
+
+  .discord-box h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .discord-box p { color: var(--muted); margin-bottom: 1.8rem; }
+
+  .btn-discord {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.9rem 2.4rem;
+    border-radius: 10px;
+    background: #5865F2;
+    color: #fff;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: transform 0.15s, background 0.2s;
+  }
+  .btn-discord:hover { transform: translateY(-2px); background: #4752C4; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid var(--border);
+    text-align: center;
+    padding: 2rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--muted);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── SCROLL REVEAL ─── */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s, transform 0.6s; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .hero { flex-direction: column; text-align: left; padding-top: 3rem; }
+    .about-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 700px) {
+    nav { padding: 1rem 1.2rem; }
+    .nav-links { gap: 1rem; }
+    .nav-links a span { display: none; }
+    section { padding: 4rem 1.2rem; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .work-tabs { width: 100%; display: flex; }
+    .work-tab { flex: 1; padding: 0.7rem 0.8rem; }
+    .games-grid { grid-template-columns: 1fr; }
+    .availability-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><span class="dot">▍</span>ILokman</div>
+  <div class="nav-links">
+    <a href="#about">about</a>
+    <a href="#skills">skills</a>
+    <a href="#projects">work</a>
+    <a href="#availability">availability</a>
+    <a href="#pricing">pricing</a>
+    <a href="#contact">contact</a>
+  </div>
+</nav>
+
+<div class="particle" style="width:6px;height:6px;background:var(--cyan);top:18%;left:8%;animation-duration:14s;"></div>
+<div class="particle" style="width:4px;height:4px;background:var(--magenta);top:35%;left:88%;animation-duration:18s;animation-delay:2s;"></div>
+<div class="particle" style="width:8px;height:8px;background:var(--amber);top:65%;left:12%;animation-duration:16s;animation-delay:4s;"></div>
+<div class="particle" style="width:5px;height:5px;background:var(--cyan);top:80%;left:75%;animation-duration:20s;animation-delay:1s;"></div>
+<div class="particle" style="width:3px;height:3px;background:var(--magenta);top:50%;left:50%;animation-duration:22s;animation-delay:6s;"></div>
+
+<section class="hero" id="home">
+  <div class="hero-left">
+    <div class="eyebrow"><span class="pulse"></span>available for new projects</div>
+    <h1>Designing polished Roblox<br>interfaces and models <span class="accent">with style.</span></h1>
+    <p class="hero-desc">I'm ILokman — a Roblox GUI designer and 3D modeler creating clean interfaces, stylized assets, and game-ready visuals for Roblox experiences.</p>
+    <div class="btn-row">
+      <a href="#projects" class="btn btn-primary">View my work</a>
+      <a href="#contact" class="btn btn-secondary">Get in touch</a>
+    </div>
+  </div>
+
+</section>
+
+<div class="divider"><span class="divider-line"></span><span class="divider-symbol">◆</span><span class="divider-line right"></span></div>
+
+<section id="about">
+  <div class="section-head reveal">
+    <span class="section-tag">// 01 — about</span>
+    <h2 class="section-title">Who I am</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-card reveal">
+      <div style="margin-bottom: 1rem;"><strong>ILokman</strong></div>
+      <p>A Roblox creator focused on clean GUI design, stylized 3D modeling, and presentation-ready game assets. I create interfaces and models that feel polished, readable, and ready to fit into a real Roblox project without looking like they escaped from 2014.</p>
+    </div>
+    <div class="stats-grid reveal">
+      <div class="stat-chip">
+        <div class="stat-num">2+ yrs</div>
+        <div class="stat-label">Experience</div>
+      </div>
+      <div class="stat-chip">
+        <div class="stat-num">UTC+3</div>
+        <div class="stat-label">Timezone</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-line"></span><span class="divider-symbol">◆</span><span class="divider-line right"></span></div>
+
+<section id="skills">
+  <div class="section-head reveal">
+    <span class="section-tag">// 02 — skills</span>
+    <h2 class="section-title">What I work with</h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <div class="skill-top"><span class="skill-num">01</span><h4>GUI Layout Design</h4></div>
+      <p>Clean, readable, scalable UI layouts</p>
+      <div class="skill-bar"><div class="skill-fill" style="width:100%"></div></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-top"><span class="skill-num">02</span><h4>Roblox UI Styling</h4></div>
+      <p>Modern panels, buttons, menus, and HUDs</p>
+      <div class="skill-bar"><div class="skill-fill" style="width:100%"></div></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-top"><span class="skill-num">03</span><h4>UX & Visual Hierarchy</h4></div>
+      <p>Clear flow, spacing, contrast, and readability</p>
+      <div class="skill-bar"><div class="skill-fill" style="width:100%"></div></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-top"><span class="skill-num">04</span><h4>3D Modeling</h4></div>
+      <p>Game-ready props, items, and environment assets</p>
+      <div class="skill-bar"><div class="skill-fill" style="width:100%"></div></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-top"><span class="skill-num">05</span><h4>Texture & Material Work</h4></div>
+      <p>Stylized surfaces, clean colors, and Roblox-friendly detail</p>
+      <div class="skill-bar"><div class="skill-fill" style="width:100%"></div></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-top"><span class="skill-num">06</span><h4>Asset Presentation</h4></div>
+      <p>Icons, thumbnails, showcases, and portfolio visuals</p>
+      <div class="skill-bar"><div class="skill-fill" style="width:100%"></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-line"></span><span class="divider-symbol">◆</span><span class="divider-line right"></span></div>
+
+<section id="projects">
+  <div class="section-head reveal">
+    <span class="section-tag">// 03 — work</span>
+    <h2 class="section-title">Selected work</h2>
+  </div>
+
+  <div class="work-tabs reveal">
+    <button class="work-tab active" type="button" data-work-tab="showcases">Model Showcases</button>
+    <button class="work-tab" type="button" data-work-tab="games">GUI Work</button>
+  </div>
+
+  <div class="work-panel active" data-work-panel="showcases">
+    <div class="projects-grid">
+      <div class="project-card reveal">
+        <img class="project-video" src="Model1.png" alt="Roblox model showcase 1">
+        <div class="project-body">
+          <h3>Model Showcase 1</h3>
+          <span class="proj-tag">3D model / Roblox asset</span>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <img class="project-video" src="Model2.png" alt="Roblox model showcase 2">
+        <div class="project-body">
+          <h3>Model Showcase 2</h3>
+          <span class="proj-tag">3D model / Roblox asset</span>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <img class="project-video" src="Model3.png" alt="Roblox model showcase 3">
+        <div class="project-body">
+          <h3>Model Showcase 3</h3>
+          <span class="proj-tag">3D model / Roblox asset</span>
+        </div>
+      </div>
+      <div class="project-card reveal hidden-showcase">
+        <img class="project-video" src="Model4.png" alt="Roblox model showcase 4">
+        <div class="project-body">
+          <h3>Model Showcase 4</h3>
+          <span class="proj-tag">3D model / Roblox asset</span>
+        </div>
+      </div>
+      <div class="project-card reveal hidden-showcase">
+        <img class="project-video" src="Model5.png" alt="Roblox model showcase 5">
+        <div class="project-body">
+          <h3>Model Showcase 5</h3>
+          <span class="proj-tag">3D model / Roblox asset</span>
+        </div>
+      </div>
+      <div class="project-card reveal hidden-showcase">
+        <img class="project-video" src="Model6.png" alt="Roblox model showcase 6">
+        <div class="project-body">
+          <h3>Model Showcase 6</h3>
+          <span class="proj-tag">3D model / Roblox asset</span>
+        </div>
+      </div>
+      <div class="project-card reveal hidden-showcase">
+        <img class="project-video" src="Model7.png" alt="Roblox model showcase 7">
+        <div class="project-body">
+          <h3>Model Showcase 7</h3>
+          <span class="proj-tag">3D model / Roblox asset</span>
+        </div>
+      </div>
+      <div class="project-card reveal hidden-showcase">
+        <img class="project-video" src="Model8.jpg" alt="Roblox model showcase 8">
+        <div class="project-body">
+          <h3>Model Showcase 8</h3>
+          <span class="proj-tag">3D model / Roblox asset</span>
+        </div>
+      </div>
+      <div class="project-card reveal hidden-showcase">
+        <img class="project-video" src="Model10.png" alt="Roblox model showcase 9">
+        <div class="project-body">
+          <h3>Model Showcase 9</h3>
+          <span class="proj-tag">3D model / Roblox asset</span>
+        </div>
+      </div>
+      <div class="project-card reveal hidden-showcase">
+        <img class="project-video" src="Model11.png" alt="Roblox model showcase 10">
+        <div class="project-body">
+          <h3>Model Showcase 10</h3>
+          <span class="proj-tag">3D model / Roblox asset</span>
+        </div>
+      </div>
+      <div class="project-card reveal hidden-showcase">
+        <img class="project-video" src="Model12.png" alt="Roblox model showcase 11">
+        <div class="project-body">
+          <h3>Model Showcase 11</h3>
+          <span class="proj-tag">3D model / Roblox asset</span>
+        </div>
+      </div>
+      <div class="project-card reveal hidden-showcase">
+        <img class="project-video" src="Model14.png" alt="Roblox model showcase 12">
+        <div class="project-body">
+          <h3>Model Showcase 12</h3>
+          <span class="proj-tag">3D model / Roblox asset</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="showcase-actions reveal">
+      <button class="showcase-toggle" type="button" id="showcaseToggle">Show All</button>
+    </div>
+  </div>
+
+  <div class="work-panel" data-work-panel="games">
+    <div class="games-grid">
+      <article class="game-card reveal">
+        <img src="Gui1.png" class="game-thumb" alt="Roblox GUI work 1">
+        <div class="game-body">
+          <span class="game-meta">Roblox interface / GUI design</span>
+          <h3>GUI Design 1</h3>
+          <p class="game-desc">A polished Roblox interface concept focused on clean layout, strong readability, and game-ready presentation.</p>
+        </div>
+      </article>
+      <article class="game-card reveal">
+        <img src="Gui2.png" class="game-thumb" alt="Roblox GUI work 2">
+        <div class="game-body">
+          <span class="game-meta">Roblox interface / GUI design</span>
+          <h3>GUI Design 2</h3>
+          <p class="game-desc">A polished Roblox interface concept focused on clean layout, strong readability, and game-ready presentation.</p>
+        </div>
+      </article>
+      <article class="game-card reveal">
+        <img src="Gui3.png" class="game-thumb" alt="Roblox GUI work 3">
+        <div class="game-body">
+          <span class="game-meta">Roblox interface / GUI design</span>
+          <h3>GUI Design 3</h3>
+          <p class="game-desc">A polished Roblox interface concept focused on clean layout, strong readability, and game-ready presentation.</p>
+        </div>
+      </article>
+      <article class="game-card reveal">
+        <img src="Gui4.png" class="game-thumb" alt="Roblox GUI work 4">
+        <div class="game-body">
+          <span class="game-meta">Roblox interface / GUI design</span>
+          <h3>GUI Design 4</h3>
+          <p class="game-desc">A polished Roblox interface concept focused on clean layout, strong readability, and game-ready presentation.</p>
+        </div>
+      </article>
+      <article class="game-card reveal">
+        <img src="Gui6.png" class="game-thumb" alt="Roblox GUI work 5">
+        <div class="game-body">
+          <span class="game-meta">Roblox interface / GUI design</span>
+          <h3>GUI Design 5</h3>
+          <p class="game-desc">A polished Roblox interface concept focused on clean layout, strong readability, and game-ready presentation.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-line"></span><span class="divider-symbol">◆</span><span class="divider-line right"></span></div>
+
+
+<section id="availability">
+  <div class="section-head reveal">
+    <span class="section-tag">// 04 — availability</span>
+    <h2 class="section-title">Availability</h2>
+  </div>
+
+  <div class="availability-grid">
+    <div class="availability-card reveal">
+      <div class="availability-status"><span></span>open for commissions</div>
+      <h3>Ready for GUI and modeling commissions</h3>
+      <p>I am available for GUI work, Roblox modeling, asset polishing, icons, thumbnails, and portfolio-ready presentation pieces. Clear references and scoped tasks are preferred because vague design requests are how civilizations collapse.</p>
+      <ul class="availability-list">
+        <li>Work Type <strong>GUI / Models / Icons</strong></li>
+        <li>Response <strong>Discord Preferred</strong></li>
+      </ul>
+    </div>
+
+    <div class="availability-card reveal">
+      <div class="availability-status"><span></span>best fit</div>
+      <h3>What I can create</h3>
+      <p>Menus, HUDs, shop interfaces, inventory screens, simulator-style UI, stylized props, low-poly assets, model showcases, icons, and thumbnail-ready visuals.</p>
+      <ul class="availability-list">
+        <li>Small Assets <strong>Available</strong></li>
+        <li>Long-Term Work <strong>Open</strong></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-line"></span><span class="divider-symbol">◆</span><span class="divider-line right"></span></div>
+
+<section id="pricing">
+  <div class="section-head reveal">
+    <span class="section-tag">// 05 — pricing</span>
+    <h2 class="section-title">Working together</h2>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <h3>Pricing Policy</h3>
+      <p>Price depends on complexity, asset count, style, and delivery scope. Every quote is based on what the design or model actually needs.</p>
+      <div class="note">Only accepting Robux payments. Final price is discussed before starting the work.</div>
+    </div>
+    <div class="price-card reveal">
+      <h3>Payment Methods</h3>
+      <ul class="payment-methods">
+        <li>Robux</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-line"></span><span class="divider-symbol">◆</span><span class="divider-line right"></span></div>
+
+<section id="contact" class="contact">
+  <div class="section-head reveal">
+    <span class="section-tag">// 06 — contact</span>
+    <h2 class="section-title">Let's build something</h2>
+  </div>
+  <div class="discord-box reveal">
+    <h3>Need GUI or models for your project?</h3>
+    <p>Reach out directly via Discord to discuss style, references, scope, and pricing.</p>
+    <a href="https://discord.com/users/955081753461157968" target="_blank" class="btn-discord">Connect on Discord</a>
+  </div>
+</section>
+
+<footer>
+  ILokman © 2026 — GUI design and Roblox modeling portfolio
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 70);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) t.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  const workTabs = document.querySelectorAll('.work-tab');
+  const workPanels = document.querySelectorAll('.work-panel');
+
+  workTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.workTab;
+
+      workTabs.forEach(t => t.classList.remove('active'));
+      workPanels.forEach(panel => panel.classList.remove('active'));
+
+      tab.classList.add('active');
+      const panel = document.querySelector(`[data-work-panel="${target}"]`);
+      if (panel) panel.classList.add('active');
+    });
+  });
+
+
+  const showcaseCards = document.querySelectorAll('[data-work-panel="showcases"] .project-card');
+  const showcaseToggle = document.getElementById('showcaseToggle');
+  let showcasesExpanded = false;
+
+  function updateShowcases() {
+    showcaseCards.forEach((card, index) => {
+      if (!showcasesExpanded && index >= 3) {
+        card.classList.add('hidden-showcase');
+      } else {
+        card.classList.remove('hidden-showcase');
+      }
+    });
+
+    if (showcaseToggle) {
+      showcaseToggle.textContent = showcasesExpanded ? 'Show Less' : 'Show All';
+    }
+  }
+
+  if (showcaseToggle) {
+    showcaseToggle.addEventListener('click', () => {
+      showcasesExpanded = !showcasesExpanded;
+      updateShowcases();
+    });
+  }
+
+  updateShowcases();
+
+  const skillCards = document.querySelectorAll('.skill-card');
+  const skillObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const fill = e.target.querySelector('.skill-fill');
+        if (fill) { const w = fill.style.width; fill.style.width = '0'; setTimeout(() => fill.style.width = w, 100); }
+      }
+    });
+  }, { threshold: 0.5 });
+  skillCards.forEach(c => skillObs.observe(c));
+</script>
+</body>
+</html>
