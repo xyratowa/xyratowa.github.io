@@ -32,7 +32,6 @@
     overflow-x: hidden;
   }
 
-  /* faint grid background */
   body::before {
     content: '';
     position: fixed;
@@ -45,7 +44,6 @@
     z-index: 0;
   }
 
-  /* ambient floating particles */
   .particle {
     position: fixed;
     border-radius: 50%;
@@ -67,7 +65,6 @@
 
   .mono { font-family: 'JetBrains Mono', monospace; }
 
-  /* ─── NAV ─── */
   nav {
     position: sticky;
     top: 0;
@@ -105,7 +102,6 @@
   .nav-links a:hover { color: var(--cyan); }
   .nav-links a::before { content: '/'; color: var(--border); margin-right: 0.3rem; }
 
-  /* ─── HERO ─── */
   .hero {
     position: relative;
     z-index: 1;
@@ -184,7 +180,6 @@
   }
   .btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); }
 
-  /* terminal card */
   .terminal {
     width: 100%;
     max-width: 420px;
@@ -199,57 +194,7 @@
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
   }
-  .terminal-bar {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.8rem 1rem;
-    background: var(--surface-2);
-    border-bottom: 1px solid var(--border);
-  }
-  .terminal-dot { width: 11px; height: 11px; border-radius: 50%; }
-  .terminal-bar .terminal-dot:nth-child(1) { background: #FF5F57; }
-  .terminal-bar .terminal-dot:nth-child(2) { background: #FEBC2E; }
-  .terminal-bar .terminal-dot:nth-child(3) { background: #28C840; }
-  .terminal-title {
-    margin-left: 0.6rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
-    color: var(--muted);
-  }
-  .terminal-body {
-    padding: 1.4rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.85rem;
-    line-height: 2;
-  }
-  .terminal-body .ln { color: var(--muted); display: inline-block; width: 1.5em; user-select: none; }
-  .t-purple { color: #C792EA; }
-  .t-cyan { color: var(--cyan); }
-  .t-string { color: #FFC857; }
-  .t-comment { color: #5C6478; font-style: italic; }
-  .t-func { color: #82AAFF; }
-  .cursor {
-    display: inline-block;
-    width: 8px; height: 1.1em;
-    background: var(--cyan);
-    vertical-align: text-bottom;
-    animation: blink 1s step-end infinite;
-  }
-  @keyframes blink { 50% { opacity: 0; } }
 
-  .hero-avatar {
-    width: 38px; height: 38px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    overflow: hidden;
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 0.6rem;
-  }
-  .hero-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-  /* ─── DIVIDER ─── */
   .divider {
     position: relative;
     z-index: 1;
@@ -295,7 +240,6 @@
     transform: rotate(90deg);
   }
 
-  /* ─── SECTION SHARED ─── */
   section { position: relative; z-index: 1; padding: 6rem 3rem; max-width: 1200px; margin: 0 auto; }
 
   .section-head { margin-bottom: 3rem; }
@@ -328,7 +272,6 @@
     width: 48px;
   }
 
-  /* ─── ABOUT ─── */
   .about-grid {
     display: grid;
     grid-template-columns: 1.3fr 1fr;
@@ -387,7 +330,6 @@
     letter-spacing: 1px;
   }
 
-  /* ─── SKILLS ─── */
   .skills-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -431,7 +373,6 @@
   }
 
   .skill-card h4 { font-size: 1.05rem; font-weight: 600; }
-
   .skill-card p { color: var(--muted); font-size: 0.88rem; margin: 0.5rem 0 0.9rem; }
 
   .skill-bar {
@@ -453,7 +394,6 @@
   .skill-card:nth-child(5) .skill-fill { background: var(--magenta); }
   .skill-card:nth-child(6) .skill-fill { background: var(--amber); }
 
-  /* ─── PROJECTS ─── */
   .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -496,7 +436,6 @@
     margin-top: 0.4rem;
     display: block;
   }
-
 
   .work-tabs {
     display: inline-flex;
@@ -565,22 +504,6 @@
     border-bottom: 1px solid var(--border);
   }
 
-  .thumb-placeholder {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background:
-      radial-gradient(circle at 30% 20%, rgba(246,199,68,0.16), transparent 32%),
-      radial-gradient(circle at 80% 65%, rgba(255,92,138,0.14), transparent 34%),
-      var(--surface-2);
-    color: var(--muted);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
-    border-bottom: 1px solid var(--border);
-  }
-
   .game-body { padding: 1.35rem 1.45rem 1.5rem; }
 
   .game-meta {
@@ -601,26 +524,6 @@
     font-size: 0.93rem;
     margin-bottom: 1.1rem;
   }
-
-  .game-actions { display: flex; gap: 0.7rem; flex-wrap: wrap; }
-
-  .mini-btn {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 0.85rem;
-    padding: 0.65rem 1rem;
-    border-radius: 9px;
-    text-decoration: none;
-    border: 1px solid var(--border);
-    color: var(--text);
-    transition: transform 0.15s, border-color 0.2s, color 0.2s, background 0.2s;
-  }
-
-  .mini-btn:hover { transform: translateY(-2px); border-color: var(--cyan); color: var(--cyan); }
-  .mini-btn.primary { background: var(--cyan); color: #0B0D12; border-color: var(--cyan); }
-  .mini-btn.primary:hover { background: #FFE08A; color: #0B0D12; }
-
-
 
   .project-card.hidden-showcase {
     display: none;
@@ -732,7 +635,6 @@
     white-space: nowrap;
   }
 
-  /* ─── PRICING ─── */
   .pricing-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -785,7 +687,6 @@
     transform: translateX(4px);
   }
 
-  /* ─── CONTACT ─── */
   .contact { text-align: center; }
 
   .discord-box {
@@ -833,7 +734,6 @@
   }
   .btn-discord:hover { transform: translateY(-2px); background: #4752C4; }
 
-  /* ─── FOOTER ─── */
   footer {
     border-top: 1px solid var(--border);
     text-align: center;
@@ -845,11 +745,9 @@
     z-index: 1;
   }
 
-  /* ─── SCROLL REVEAL ─── */
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s, transform 0.6s; }
   .reveal.visible { opacity: 1; transform: none; }
 
-  /* ─── RESPONSIVE ─── */
   @media (max-width: 900px) {
     .hero { flex-direction: column; text-align: left; padding-top: 3rem; }
     .about-grid { grid-template-columns: 1fr; }
@@ -898,7 +796,6 @@
       <a href="#contact" class="btn btn-secondary">Get in touch</a>
     </div>
   </div>
-
 </section>
 
 <div class="divider"><span class="divider-line"></span><span class="divider-symbol">◆</span><span class="divider-line right"></span></div>
@@ -980,89 +877,90 @@
     <button class="work-tab" type="button" data-work-tab="games">GUI Work</button>
   </div>
 
+  <!-- ═══ MODEL SHOWCASES — sadece modeller ═══ -->
   <div class="work-panel active" data-work-panel="showcases">
     <div class="projects-grid">
       <div class="project-card reveal">
         <img class="project-video" src="Model1.png" alt="Roblox model showcase 1">
         <div class="project-body">
-          <h3>Model Showcase 1</h3>
+          <h3>Subway Environment</h3>
           <span class="proj-tag">3D model / Roblox asset</span>
         </div>
       </div>
       <div class="project-card reveal">
         <img class="project-video" src="Model2.png" alt="Roblox model showcase 2">
         <div class="project-body">
-          <h3>Model Showcase 2</h3>
+          <h3>Modern Interior</h3>
           <span class="proj-tag">3D model / Roblox asset</span>
         </div>
       </div>
       <div class="project-card reveal">
         <img class="project-video" src="Model3.png" alt="Roblox model showcase 3">
         <div class="project-body">
-          <h3>Model Showcase 3</h3>
+          <h3>Tunnel Environment</h3>
           <span class="proj-tag">3D model / Roblox asset</span>
         </div>
       </div>
       <div class="project-card reveal hidden-showcase">
         <img class="project-video" src="Model4.png" alt="Roblox model showcase 4">
         <div class="project-body">
-          <h3>Model Showcase 4</h3>
+          <h3>Cafe Environment</h3>
           <span class="proj-tag">3D model / Roblox asset</span>
         </div>
       </div>
       <div class="project-card reveal hidden-showcase">
         <img class="project-video" src="Model5.png" alt="Roblox model showcase 5">
         <div class="project-body">
-          <h3>Model Showcase 5</h3>
+          <h3>Playground Environment</h3>
           <span class="proj-tag">3D model / Roblox asset</span>
         </div>
       </div>
       <div class="project-card reveal hidden-showcase">
         <img class="project-video" src="Model6.png" alt="Roblox model showcase 6">
         <div class="project-body">
-          <h3>Model Showcase 6</h3>
+          <h3>Stylized Outdoor Area</h3>
           <span class="proj-tag">3D model / Roblox asset</span>
         </div>
       </div>
       <div class="project-card reveal hidden-showcase">
         <img class="project-video" src="Model7.png" alt="Roblox model showcase 7">
         <div class="project-body">
-          <h3>Model Showcase 7</h3>
+          <h3>Horror Environment</h3>
           <span class="proj-tag">3D model / Roblox asset</span>
         </div>
       </div>
       <div class="project-card reveal hidden-showcase">
         <img class="project-video" src="Model8.jpg" alt="Roblox model showcase 8">
         <div class="project-body">
-          <h3>Model Showcase 8</h3>
+          <h3>Parking Garage</h3>
           <span class="proj-tag">3D model / Roblox asset</span>
         </div>
       </div>
       <div class="project-card reveal hidden-showcase">
         <img class="project-video" src="Model10.png" alt="Roblox model showcase 9">
         <div class="project-body">
-          <h3>Model Showcase 9</h3>
+          <h3>Fantasy Forest</h3>
           <span class="proj-tag">3D model / Roblox asset</span>
         </div>
       </div>
       <div class="project-card reveal hidden-showcase">
         <img class="project-video" src="Model11.png" alt="Roblox model showcase 10">
         <div class="project-body">
-          <h3>Model Showcase 10</h3>
+          <h3>Tropical Night Scene</h3>
           <span class="proj-tag">3D model / Roblox asset</span>
         </div>
       </div>
       <div class="project-card reveal hidden-showcase">
         <img class="project-video" src="Model12.png" alt="Roblox model showcase 11">
         <div class="project-body">
-          <h3>Model Showcase 11</h3>
+          <h3>Luxury Waterfront</h3>
           <span class="proj-tag">3D model / Roblox asset</span>
         </div>
       </div>
       <div class="project-card reveal hidden-showcase">
         <img class="project-video" src="Model14.png" alt="Roblox model showcase 12">
         <div class="project-body">
-          <h3>Model Showcase 12</h3>
+          <h3>Ocean Resort</h3>
           <span class="proj-tag">3D model / Roblox asset</span>
         </div>
       </div>
@@ -1073,6 +971,7 @@
     </div>
   </div>
 
+  <!-- ═══ GUI WORK — sadece GUI'ler ═══ -->
   <div class="work-panel" data-work-panel="games">
     <div class="games-grid">
       <article class="game-card reveal">
@@ -1119,7 +1018,7 @@
         <img src="Gui19.png" class="game-thumb" alt="GUI 19">
         <div class="game-body">
           <span class="game-meta">Roblox interface / GUI design</span>
-          <h3>GUI 19</h3>
+          <h3>GUI Design 6</h3>
           <p class="game-desc">Custom Roblox UI design showcase.</p>
         </div>
       </article>
@@ -1127,7 +1026,7 @@
         <img src="Gui20.png" class="game-thumb" alt="GUI 20">
         <div class="game-body">
           <span class="game-meta">Roblox interface / GUI design</span>
-          <h3>GUI 20</h3>
+          <h3>GUI Design 7</h3>
           <p class="game-desc">Custom Roblox UI design showcase.</p>
         </div>
       </article>
@@ -1135,7 +1034,7 @@
         <img src="Gui21.png" class="game-thumb" alt="GUI 21">
         <div class="game-body">
           <span class="game-meta">Roblox interface / GUI design</span>
-          <h3>GUI 21</h3>
+          <h3>GUI Design 8</h3>
           <p class="game-desc">Custom Roblox UI design showcase.</p>
         </div>
       </article>
@@ -1143,104 +1042,8 @@
         <img src="Gui22.png" class="game-thumb" alt="GUI 22">
         <div class="game-body">
           <span class="game-meta">Roblox interface / GUI design</span>
-          <h3>GUI 22</h3>
+          <h3>GUI Design 9</h3>
           <p class="game-desc">Custom Roblox UI design showcase.</p>
-        </div>
-      </article>
-      <article class="game-card reveal">
-        <img src="Model1.png" class="game-thumb" alt="Model 1">
-        <div class="game-body">
-          <span class="game-meta">Roblox modeling</span>
-          <h3>Subway Environment</h3>
-          <p class="game-desc">3D model showcase for Roblox projects.</p>
-        </div>
-      </article>
-      <article class="game-card reveal">
-        <img src="Model2.png" class="game-thumb" alt="Model 2">
-        <div class="game-body">
-          <span class="game-meta">Roblox modeling</span>
-          <h3>Modern Interior</h3>
-          <p class="game-desc">3D model showcase for Roblox projects.</p>
-        </div>
-      </article>
-      <article class="game-card reveal">
-        <img src="Model3.png" class="game-thumb" alt="Model 3">
-        <div class="game-body">
-          <span class="game-meta">Roblox modeling</span>
-          <h3>Tunnel Environment</h3>
-          <p class="game-desc">3D model showcase for Roblox projects.</p>
-        </div>
-      </article>
-      <article class="game-card reveal">
-        <img src="Model4.png" class="game-thumb" alt="Model 4">
-        <div class="game-body">
-          <span class="game-meta">Roblox modeling</span>
-          <h3>Cafe Environment</h3>
-          <p class="game-desc">3D model showcase for Roblox projects.</p>
-        </div>
-      </article>
-      <article class="game-card reveal">
-        <img src="Model5.png" class="game-thumb" alt="Model 5">
-        <div class="game-body">
-          <span class="game-meta">Roblox modeling</span>
-          <h3>Playground Environment</h3>
-          <p class="game-desc">3D model showcase for Roblox projects.</p>
-        </div>
-      </article>
-      <article class="game-card reveal">
-        <img src="Model6.png" class="game-thumb" alt="Model 6">
-        <div class="game-body">
-          <span class="game-meta">Roblox modeling</span>
-          <h3>Stylized Outdoor Area</h3>
-          <p class="game-desc">3D model showcase for Roblox projects.</p>
-        </div>
-      </article>
-      <article class="game-card reveal">
-        <img src="Model7.png" class="game-thumb" alt="Model 7">
-        <div class="game-body">
-          <span class="game-meta">Roblox modeling</span>
-          <h3>Horror Environment</h3>
-          <p class="game-desc">3D model showcase for Roblox projects.</p>
-        </div>
-      </article>
-      <article class="game-card reveal">
-        <img src="Model8.jpg" class="game-thumb" alt="Model 8">
-        <div class="game-body">
-          <span class="game-meta">Roblox modeling</span>
-          <h3>Parking Garage</h3>
-          <p class="game-desc">3D model showcase for Roblox projects.</p>
-        </div>
-      </article>
-      <article class="game-card reveal">
-        <img src="Model10.png" class="game-thumb" alt="Model 10">
-        <div class="game-body">
-          <span class="game-meta">Roblox modeling</span>
-          <h3>Fantasy Forest</h3>
-          <p class="game-desc">3D model showcase for Roblox projects.</p>
-        </div>
-      </article>
-      <article class="game-card reveal">
-        <img src="Model11.png" class="game-thumb" alt="Model 11">
-        <div class="game-body">
-          <span class="game-meta">Roblox modeling</span>
-          <h3>Tropical Night Scene</h3>
-          <p class="game-desc">3D model showcase for Roblox projects.</p>
-        </div>
-      </article>
-      <article class="game-card reveal">
-        <img src="Model12.png" class="game-thumb" alt="Model 12">
-        <div class="game-body">
-          <span class="game-meta">Roblox modeling</span>
-          <h3>Luxury Waterfront</h3>
-          <p class="game-desc">3D model showcase for Roblox projects.</p>
-        </div>
-      </article>
-      <article class="game-card reveal">
-        <img src="Model14.png" class="game-thumb" alt="Model 14">
-        <div class="game-body">
-          <span class="game-meta">Roblox modeling</span>
-          <h3>Ocean Resort</h3>
-          <p class="game-desc">3D model showcase for Roblox projects.</p>
         </div>
       </article>
     </div>
@@ -1248,7 +1051,6 @@
 </section>
 
 <div class="divider"><span class="divider-line"></span><span class="divider-symbol">◆</span><span class="divider-line right"></span></div>
-
 
 <section id="availability">
   <div class="section-head reveal">
@@ -1346,16 +1148,13 @@
   workTabs.forEach(tab => {
     tab.addEventListener('click', () => {
       const target = tab.dataset.workTab;
-
       workTabs.forEach(t => t.classList.remove('active'));
       workPanels.forEach(panel => panel.classList.remove('active'));
-
       tab.classList.add('active');
       const panel = document.querySelector(`[data-work-panel="${target}"]`);
       if (panel) panel.classList.add('active');
     });
   });
-
 
   const showcaseCards = document.querySelectorAll('[data-work-panel="showcases"] .project-card');
   const showcaseToggle = document.getElementById('showcaseToggle');
@@ -1369,7 +1168,6 @@
         card.classList.remove('hidden-showcase');
       }
     });
-
     if (showcaseToggle) {
       showcaseToggle.textContent = showcasesExpanded ? 'Show Less' : 'Show All';
     }
